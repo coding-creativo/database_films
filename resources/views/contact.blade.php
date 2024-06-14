@@ -1,24 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+@extends('layouts.app')
 
-    <form method="post" action="{{ route('sendEmail') }}">
-        @csrf
-        <label for="name">Nome:</label><br>
-        <input type="text" id="name" name="name" required><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br>
-        <label for="message">Messaggio:</label><br>
-        <textarea id="message" name="message" rows="4" required></textarea><br>
-        <input type="submit" value="Invia">
-    </form>
-    
-    
-</body>
-</html>
+@section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Modulo di Contatto</h5>
+                    <form action="{{ route('sendEmail') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messaggio" class="form-label">Messaggio</label>
+                            <textarea class="form-control" id="messaggio" name="messaggio" rows="5" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Invia Messaggio</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

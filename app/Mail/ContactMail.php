@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -27,10 +28,11 @@ class ContactMail extends Mailable
         $this->message = $data['message'];
     }
 
-    public function build()
-    {
-        return $this->from($this->email);
-    }
+    // Nelle versioni precedenti si usava build - adesso si inserisce dentro envelope
+    //public function build()
+    // {
+    //     return $this->from($this->email);
+    // }
 
     /**
      * Get the message envelope.
@@ -39,6 +41,7 @@ class ContactMail extends Mailable
     {
         return new Envelope(
             subject: 'Contact Mail',
+            from: new Address($this->email),
         );
     }
 
