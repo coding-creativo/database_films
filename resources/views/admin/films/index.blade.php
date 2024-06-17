@@ -57,7 +57,7 @@
                             <img src="https://cdn.pixabay.com/photo/2023/08/11/16/50/water-8183918_1280.jpg" class="img-thumbnail"
                             style="max-width: 150px;">
                             @else
-                            <img src="{{ asset('storage/' . $film->poster) }}" alt="{{ $film->title }}"
+                            <img src="{{ asset('storage/posters/' . $film->poster) }}" alt="{{ $film->title }}"
                                 class="img-thumbnail" style="max-width: 150px;">
                             @endif
                         </td>

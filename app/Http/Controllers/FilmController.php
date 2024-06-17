@@ -7,6 +7,7 @@ use App\Models\Director;
 use App\Models\Film;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FilmController extends Controller
 {
@@ -17,25 +18,25 @@ class FilmController extends Controller
     {
         // $films = Film::orderBy('id')->paginate(10);
 
-       
+
         $sorting_options = [
-            'title_asc' => ['title','asc'],
-            'title_desc' => ['title','desc'],
-            'anno_asc' => ['year','asc'],
-            'anno_desc' => ['year','desc'],
-            'director_asc' => ['name','asc'],
-            'director_desc' => ['name','desc'],
+            'title_asc' => ['title', 'asc'],
+            'title_desc' => ['title', 'desc'],
+            'anno_asc' => ['year', 'asc'],
+            'anno_desc' => ['year', 'desc'],
+            'director_asc' => ['name', 'asc'],
+            'director_desc' => ['name', 'desc'],
         ];
 
         $default_sorting = ['title', 'asc'];
-        $sort = $request->input('sort');       
+        $sort = $request->input('sort');
 
         $orderBy =  $sorting_options[$sort] ?? $default_sorting;
         // dd($orderBy);
         //nel model la relazione si chiama director        
-        $films = Film::with('director')->leftJoin('directors', 'films.director_id', '=', 'directors.id')->orderBy($orderBy[0],$orderBy[1])->select('films.*', 'directors.name as director_name')->paginate(10);
+        $films = Film::with('director')->leftJoin('directors', 'films.director_id', '=', 'directors.id')->orderBy($orderBy[0], $orderBy[1])->select('films.*', 'directors.name as director_name')->paginate(10);
 
-        return view('admin.films.index', compact('films','sort'));
+        return view('admin.films.index', compact('films', 'sort'));
     }
 
     /**
@@ -52,19 +53,20 @@ class FilmController extends Controller
         return view('admin.films.create', compact('genres', 'directors', 'actors'));
     }
 
-    private function validateFilmData(Request $request)     {
+    private function validateFilmData(Request $request)
+    {
         return $request->validate([
-            'title' => 'required|string|max:255',            
+            'title' => 'required|string|max:255',
             'director_id' => 'required|exists:directors,id',
-            'actors' => 'required|array',            
+            'actors' => 'required|array',
             'actors.*' => 'exists:actors,id',
-            'year' => 'required|integer|min:1900|max:' . (date('Y')),           
+            'year' => 'required|integer|min:1900|max:' . (date('Y')),
             'description' => 'required|string',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'genres' => 'required|array',            
-            'genres.*' => 'exists:genres,id',       
-        ]);    
-}
+            'genres' => 'required|array',
+            'genres.*' => 'exists:genres,id',
+        ]);
+    }
 
 
     /**
@@ -80,24 +82,20 @@ class FilmController extends Controller
         $film->fill($validateData);
 
         //gestiamo l'immagine
-        if($request->hasFile('poster')){
-            $fileName = time() . '_' .$request->file('poster')->getClientOriginalName();
+        if ($request->hasFile('poster')) {
+            $fileName = time() . '_' . $request->file('poster')->getClientOriginalName();
             //carica l'immagine dentro la cartella storage/posters
-            $posterPath = $request->file('poster')->storeAs('posters', $fileName, 'public');
-            // $request->file('poster')->store('posters', 'public');
-
-            //salva il percorso nel campo del db
-            $film->poster = $posterPath;
+            $request->file('poster')->storeAs('posters', $fileName, 'public');
+            //salva il percorso solo del nome del file nel campo del db
+            $film->poster = $fileName;
         }
 
-        if($film->save()){
+        if ($film->save()) {
             $film->actors()->attach($validateData['actors']);
             $film->genres()->attach($validateData['genres']);
         }
 
         return redirect()->route('films.index');
-
-
     }
 
     /**
@@ -135,22 +133,21 @@ class FilmController extends Controller
         $film = Film::findOrFail($id);
         $film->fill($validateData);
 
-        if($request->hasFile('poster')){
+        if ($request->hasFile('poster')) {
             //gestiamo l'immagine
-        $fileName = time() . '_' .$request->file('poster')->getClientOriginalName();
-        //carica l'immagine dentro la cartella storage/posters
-        $posterPath = $request->file('poster')->storeAs('posters', $fileName, 'public');
-        //salva il percorso nel campo del db
-        $film->poster = $posterPath;
+            $fileName = time() . '_' . $request->file('poster')->getClientOriginalName();
+            //carica l'immagine dentro la cartella storage/posters
+            $posterPath = $request->file('poster')->storeAs('posters', $fileName, 'public');
+            //salva il percorso nel campo del db
+            $film->poster = $posterPath;
         }
 
-        if($film->save()){
+        if ($film->save()) {
             $film->actors()->sync($validateData['actors']);
             $film->genres()->sync($validateData['genres']);
         }
 
         return redirect()->route('films.index');
-
     }
 
     /**
@@ -158,23 +155,17 @@ class FilmController extends Controller
      */
     public function destroy(string $id)
     {
-       $film = Film::find($id);
-       if(!$film) {
-            return redirect()->route('films.index')->with('error','film non presente');
-       }
+        $film = Film::find($id);
+        if (!$film) {
+            return redirect()->route('films.index')->with('error', 'film non presente');
+        }
 
+        //  eliminiamo dallo storage l'immagine per non appensatire le cartelle in rete
+        $posterPath = 'public/posters/' . $film->poster;
+        Storage::delete($posterPath);
 
-       $posterPath = $film->poster ? storage_path('storage/'.$film->poster) : null;
-     
+        $film->delete();
 
-       if($posterPath && file_exists($posterPath)) {
-        unlink($posterPath);
-       }
-
-       $film->delete();
-
-       return redirect()->route('films.index')->with('success','film eliminato');
-
-
+        return redirect()->route('films.index')->with('success', 'film eliminato');
     }
 }
