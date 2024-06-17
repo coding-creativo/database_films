@@ -33,7 +33,7 @@ class FilmController extends Controller
         $orderBy =  $sorting_options[$sort] ?? $default_sorting;
         // dd($orderBy);
         //nel model la relazione si chiama director        
-        $films = Film::with('director')->leftJoin('directors', 'films.director_id', '=', 'directors.id')->orderBy($orderBy[0],$orderBy[1])->paginate(10);
+        $films = Film::with('director')->leftJoin('directors', 'films.director_id', '=', 'directors.id')->orderBy($orderBy[0],$orderBy[1])->select('films.*', 'directors.name as director_name')->paginate(10);
 
         return view('admin.films.index', compact('films','sort'));
     }
@@ -160,16 +160,16 @@ class FilmController extends Controller
     {
        $film = Film::find($id);
        if(!$film) {
-        return redirect()->route('films.index')->with('success','film non presente');
+            return redirect()->route('films.index')->with('error','film non presente');
        }
 
-    // //    cancelliamo il percorso dell'immagine
-    //    $posterPath = $film->poster ? storage_path('app/public/storage/'.$film->poster) : null;
+
+       $posterPath = $film->poster ? storage_path('storage/'.$film->poster) : null;
      
 
-    //    if($posterPath) {
-    //     unlink($posterPath);
-    //    }
+       if($posterPath && file_exists($posterPath)) {
+        unlink($posterPath);
+       }
 
        $film->delete();
 
