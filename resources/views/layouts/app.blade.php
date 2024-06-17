@@ -32,10 +32,10 @@
                     <a class="nav-link {{Request::routeIs('email') ? 'active' : ''}}" href="{{ route('email') }}">Contatti</a>
                 </li>
                 <li>
-                    {{-- <form id="searchForm" class="d-flex" action="{{ route('films.search') }}" method="GET">
+                    <form id="searchForm" class="d-flex" action="{{ route('films.search') }}" method="GET">
                         <input id="searchInput" class="form-control me-2" type="search" placeholder="Cerca un film" aria-label="Search" name="search">
                         <button class="btn btn-outline-success" type="submit">Cerca</button>
-                    </form>                     --}}
+                    </form>                    
                     
                 </li>
             </ul>

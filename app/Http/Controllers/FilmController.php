@@ -13,10 +13,26 @@ class FilmController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $films = Film::orderBy('id')->paginate(10);
-        return view('admin.films.index', compact('films'));
+        // $films = Film::orderBy('id')->paginate(10);
+
+       
+        $sorting_options = [
+            'title_asc' => ['title','asc'],
+            'title_desc' => ['title','desc'],
+            'anno_asc' => ['year','asc'],
+            'anno_desc' => ['year','desc'],
+        ];
+
+        $default_sorting = ['title', 'asc'];
+        $sort = $request->input('sort');       
+
+        $orderBy =  $sorting_options[$sort] ?? $default_sorting;
+        // dd($orderBy);
+        $films = Film::orderBy($orderBy[0],$orderBy[1])->paginate(10);
+
+        return view('admin.films.index', compact('films','sort'));
     }
 
     /**
@@ -65,6 +81,8 @@ class FilmController extends Controller
             $fileName = time() . '_' .$request->file('poster')->getClientOriginalName();
             //carica l'immagine dentro la cartella storage/posters
             $posterPath = $request->file('poster')->storeAs('posters', $fileName, 'public');
+            // $request->file('poster')->store('posters', 'public');
+
             //salva il percorso nel campo del db
             $film->poster = $posterPath;
         }
@@ -137,6 +155,23 @@ class FilmController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+       $film = Film::find($id);
+       if(!$film) {
+        return redirect()->route('films.index')->with('success','film non presente');
+       }
+
+    // //    cancelliamo il percorso dell'immagine
+    //    $posterPath = $film->poster ? storage_path('app/public/storage/'.$film->poster) : null;
+     
+
+    //    if($posterPath) {
+    //     unlink($posterPath);
+    //    }
+
+       $film->delete();
+
+       return redirect()->route('films.index')->with('success','film eliminato');
+
+
     }
 }

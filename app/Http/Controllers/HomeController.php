@@ -14,54 +14,29 @@ class HomeController extends Controller
     {
         $films = Film::inRandomOrder()->paginate(8); //in ordine random 
         return view('welcome', ['films' => $films]);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    }    
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        //per visualizzare un singolo film
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function search(Request $request)
     {
-        //
+        // dd($request);
+        $search = $request->search;
+        // dd($search);
+        //filtrare i dati per questo campo di ricerca
+        $films = Film::where('title','like','%'.$search .'%')->get();
+        // dd($film);
+        return view('films.search', compact('films'));
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
+    
 }

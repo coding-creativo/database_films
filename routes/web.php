@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/films/ricerca', [HomeController::class, 'search'])->name('films.search');
 
 Route::get('/contact', function () {
     return view('contact');
