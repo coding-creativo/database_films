@@ -23,6 +23,8 @@ class FilmController extends Controller
             'title_desc' => ['title','desc'],
             'anno_asc' => ['year','asc'],
             'anno_desc' => ['year','desc'],
+            'director_asc' => ['name','asc'],
+            'director_desc' => ['name','desc'],
         ];
 
         $default_sorting = ['title', 'asc'];
@@ -30,7 +32,8 @@ class FilmController extends Controller
 
         $orderBy =  $sorting_options[$sort] ?? $default_sorting;
         // dd($orderBy);
-        $films = Film::orderBy($orderBy[0],$orderBy[1])->paginate(10);
+        //nel model la relazione si chiama director        
+        $films = Film::with('director')->leftJoin('directors', 'films.director_id', '=', 'directors.id')->orderBy($orderBy[0],$orderBy[1])->paginate(10);
 
         return view('admin.films.index', compact('films','sort'));
     }

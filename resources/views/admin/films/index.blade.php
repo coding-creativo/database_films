@@ -20,7 +20,9 @@
                         <th>Immagine di copertina</th>
                         <th>Genere</th>
                         <th>Regista
-                           
+                            <a href="{{ route('films.index', ['sort' => $sort === 'director_asc' ? 'director_desc' : 'director_asc']) }}">
+                                <i class="fa-solid fa-arrow-{{ $sort === 'director_asc' ? 'down' : 'up' }}"></i>
+                            </a>
                         </th>
                         <th>Attori</th>
                         <th>Anno
@@ -75,6 +77,8 @@
             </table>
         </div>
     </div>
+    
+    {{-- modifichiamo la paginazione per non perdere l'ordinamento --}}
     <div class="pagination-container">
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
@@ -85,7 +89,7 @@
                     </li>
                 @else
                     <li class="page-item">
-                        <a class="page-link" href="{{ $films->previousPageUrl() }}" aria-label="Previous">
+                        <a class="page-link" href="{{ $films->appends(['sort' => $sort])->previousPageUrl() }}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
                         </a>
@@ -95,14 +99,14 @@
                 {{-- Link alle pagine --}}
                 @foreach ($films->getUrlRange(1, $films->lastPage()) as $page => $url)
                     <li class="page-item {{ $page == $films->currentPage() ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        <a class="page-link" href="{{ $films->appends(['sort' => $sort])->url($page) }}">{{ $page }}</a>
                     </li>
                 @endforeach
                 
                 {{-- Link alla pagina successiva --}}
                 @if ($films->hasMorePages())
                     <li class="page-item">
-                        <a class="page-link" href="{{ $films->nextPageUrl() }}" aria-label="Next">
+                        <a class="page-link" href="{{ $films->appends(['sort' => $sort])->nextPageUrl() }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -115,5 +119,7 @@
             </ul>
         </nav>
     </div>
+    
+    
 </div>
 @endsection
