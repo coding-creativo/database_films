@@ -5,6 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
+                <p class="prova">ciao</p>
                 <div class="card-body">
                     <h5 class="card-title text-center mb-4">Modulo di Contatto</h5>
                     <form action="{{ route('sendEmail') }}" method="POST">

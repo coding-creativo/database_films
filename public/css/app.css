@@ -21,3 +21,7 @@
     height: 100%; /* Occupa l'intera altezza del riquadro */
     width: 100%; /* Occupa l'intera larghezza del riquadro */
 }
+
+.prova {
+    color: red;
+}

@@ -23,26 +23,26 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Titolo
+                        <th>{{ __('messages.title') }}
                             <a href="{{route('films.index',['sort' => $sort === 'title_asc' ? 'title_desc' : 'title_asc' ] ) }}">
                                 <i class="fa-solid fa-arrow-{{$sort === 'title_asc' ? 'down' : 'up'}}"></i>
                             </a>
 
                         </th>
                         <th>Immagine di copertina</th>
-                        <th>Genere</th>
+                        <th>{{ __('messages.genres') }}</th>
                         <th>Regista
                             <a href="{{ route('films.index', ['sort' => $sort === 'director_asc' ? 'director_desc' : 'director_asc']) }}">
                                 <i class="fa-solid fa-arrow-{{ $sort === 'director_asc' ? 'down' : 'up' }}"></i>
                             </a>
                         </th>
-                        <th>Attori</th>
-                        <th>Anno
+                        <th>{{ __('messages.actors') }}</th>
+                        <th>{{ __('messages.year') }}
                             <a href="{{route('films.index',['sort' => $sort === 'anno_asc' ? 'anno_desc' : 'anno_asc' ] ) }}">
                                 <i class="fa-solid fa-arrow-{{$sort === 'anno_asc' ? 'down' : 'up'}}"></i>
                             </a>
                         </th>
-                        <th>Opzioni</th>
+                        <th>{{ __('messages.options') }}</th>
                     </tr>
                 </thead>
                 <tbody>

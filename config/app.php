@@ -83,7 +83,18 @@ return [
     |
     */
 
-    'locale' => 'it',
+    // aggiunto
+    'locales' => [
+        'en' => 'EN',
+        'it' => 'IT',
+        'de' => 'DE'
+    ],
+
+    'locale_flags' => [
+        'en' => 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1fa-1f1f8.svg',
+        'it' => 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1ee-1f1f9.svg',
+        'de' => 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1e9-1f1ea.svg',
+    ],
 
     /*
     |--------------------------------------------------------------------------

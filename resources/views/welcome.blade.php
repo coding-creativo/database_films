@@ -8,10 +8,15 @@
             <div class="card h-100">
                 <div class="film-poster overflow-hidden">
                     @if (filter_var($film->poster, FILTER_VALIDATE_URL))
-                        <img src="{{ $film->poster }}" alt="Poster del film" class="img-fluid">
-                    @else
-                        <img src="{{ asset('storage/' . $film->poster) }}" alt="Poster del film" class="img-fluid">
-                    @endif
+                            <img src="{{ $film->poster }}" alt="{{ $film->title }}" class="img-thumbnail"
+                                style="max-width: 150px;">
+                            @elseif($film->poster === null)
+                            <img src="https://cdn.pixabay.com/photo/2023/08/11/16/50/water-8183918_1280.jpg" class="img-thumbnail"
+                            style="max-width: 150px;">
+                            @else
+                            <img src="{{ asset('storage/posters/' . $film->poster) }}" alt="{{ $film->title }}"
+                                class="img-thumbnail" style="max-width: 150px;">
+                            @endif
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ $film->title }}</h5>

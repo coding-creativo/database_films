@@ -6,6 +6,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LanguageController;
 use Database\Factories\GenreFactory;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +28,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/films/ricerca', [HomeController::class, 'search'])->name('films.search');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('email');
+// aggiunta rotte 
+Route::get('/films/genre/{genre}',  [HomeController::class, 'genre'])->name('films.genre');
+Route::get('lang/{lang}', [LanguageController::class, 'switchLang'])->name('switchLang');
+Route::get('/contact',  [HomeController::class, 'contatti'])->name('email');
+
+// Route::get('/contact', function () {
+//     return view('contact');
+// })->name('email');
 
 Route::post('/send-email', [EmailController::class, 'sendEmail'])->name('sendEmail');
 
